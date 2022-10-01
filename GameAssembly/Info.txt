@@ -1,0 +1,3 @@
+Files from Melodys Escape 2/MelodysEscape2_Data/Managed/ neede:
+Assembly-CSharp.dll
+UnityEngine.CoreModule.dll
