@@ -1,3 +1,5 @@
-Files from Melodys Escape 2/MelodysEscape2_Data/Managed/ neede:
+Files from Melodys Escape 2/MelodysEscape2_Data/Managed/ needed:
 Assembly-CSharp.dll
+MelodyReactor2.dll
 UnityEngine.CoreModule.dll
+Unity.TextMeshPro.dll

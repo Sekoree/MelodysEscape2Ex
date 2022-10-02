@@ -364,4 +364,6 @@ FodyWeavers.xsd
 
 GameAssembly/Assembly-CSharp.dll
 GameAssembly/UnityEngine.CoreModule.dll
+GameAssembly/MelodyReactor2.dll
+GameAssembly/Unity.TextMeshPro.dll
 .idea/

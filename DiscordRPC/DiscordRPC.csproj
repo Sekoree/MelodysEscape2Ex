@@ -40,6 +40,9 @@
           <HintPath>..\GameAssembly\Assembly-CSharp.dll</HintPath>
           <Private>False</Private>
         </Reference>
+        <Reference Include="MelodyReactor2">
+          <HintPath>..\GameAssembly\MelodyReactor2.dll</HintPath>
+        </Reference>
         <Reference Include="Mono.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
           <HintPath>..\packages\Mono.Cecil.0.11.4\lib\net40\Mono.Cecil.dll</HintPath>
           <Private>False</Private>
@@ -68,6 +71,9 @@
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
+        <Reference Include="Unity.TextMeshPro">
+          <HintPath>..\GameAssembly\Unity.TextMeshPro.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>..\packages\UnityEngine.Modules.2019.4.25\lib\net45\UnityEngine.dll</HintPath>
           <Private>False</Private>
