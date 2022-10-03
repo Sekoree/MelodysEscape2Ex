@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreSelectionLocations", "M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordRPC", "DiscordRPC\DiscordRPC.csproj", "{F5F0B13D-3FBE-46A5-BE58-62A1FD7636DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomAudioEngine", "CustomAudioEngine\CustomAudioEngine.csproj", "{2A764C15-65F2-4405-A2EF-23491A156063}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{F5F0B13D-3FBE-46A5-BE58-62A1FD7636DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5F0B13D-3FBE-46A5-BE58-62A1FD7636DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5F0B13D-3FBE-46A5-BE58-62A1FD7636DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A764C15-65F2-4405-A2EF-23491A156063}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A764C15-65F2-4405-A2EF-23491A156063}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A764C15-65F2-4405-A2EF-23491A156063}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A764C15-65F2-4405-A2EF-23491A156063}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

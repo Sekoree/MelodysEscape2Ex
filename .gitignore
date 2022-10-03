@@ -366,4 +366,5 @@ GameAssembly/Assembly-CSharp.dll
 GameAssembly/UnityEngine.CoreModule.dll
 GameAssembly/MelodyReactor2.dll
 GameAssembly/Unity.TextMeshPro.dll
+GameAssembly/taglib-sharp.dll
 .idea/

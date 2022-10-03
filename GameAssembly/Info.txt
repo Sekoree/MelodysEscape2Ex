@@ -3,3 +3,4 @@ Assembly-CSharp.dll
 MelodyReactor2.dll
 UnityEngine.CoreModule.dll
 Unity.TextMeshPro.dll
+taglib-sharp.dll
