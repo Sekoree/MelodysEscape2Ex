@@ -287,10 +287,8 @@ for (int i = 0; i < someArray.Length; i++)
 }
 
 Console.WriteLine("Demo:");
-Console.WriteLine("eMail: " + StringConv(GetBase64String(someArray, 2133, 8))
-+ StringConv(GetBase64String(someArray, 2141, 4))
-+ StringConv(GetBase64String(someArray, 2145, 16)));
-
+Console.WriteLine(GetBase64String(someArray, 1873, 28));
+Console.WriteLine(GetBase64String(someArray, 1901, 4));
 
 static string GetBase64String(byte[] array, int start, int length)
 {

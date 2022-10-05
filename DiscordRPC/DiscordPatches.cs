@@ -20,7 +20,7 @@ namespace DiscordRPC
         {
             Debug.Log("Discord RPC: Initializing");
             //replace with your discord apps client ID
-            Shared.DiscordRpcClient = new Discord.Discord(default, (UInt64)Discord.CreateFlags.Default);
+            Shared.DiscordRpcClient = new Discord.Discord(1025837502206054451, (UInt64)Discord.CreateFlags.Default);
             Shared.DiscordRpcClient.SetLogHook(LogLevel.Debug,
                 (level, message) => { Debug.Log($"Log {level} {message}"); });
             Debug.Log("Discord RPC: Initialized");
@@ -180,7 +180,8 @@ namespace DiscordRPC
                 Details = $"{hearts} | Difficulty: {__instance.TextDifficultyValue.text} | Best Chain: {__instance.TextMaxChainValue.text}",
                 Assets =
                 {
-                    LargeImage = "melody"
+                    LargeImage = "melody",
+                    LargeText = $"Score: {track.Score} | Score Target: {track.ScoreTargets[4]}",
                 },
                 Timestamps =
                 {
