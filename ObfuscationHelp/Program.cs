@@ -287,8 +287,7 @@ for (int i = 0; i < someArray.Length; i++)
 }
 
 Console.WriteLine("Demo:");
-Console.WriteLine(GetBase64String(someArray, 1873, 28));
-Console.WriteLine(GetBase64String(someArray, 1901, 4));
+Console.WriteLine(GetBase64String(someArray, 771, 1));
 
 static string GetBase64String(byte[] array, int start, int length)
 {

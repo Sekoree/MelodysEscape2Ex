@@ -4,3 +4,5 @@ MelodyReactor2.dll
 UnityEngine.CoreModule.dll
 Unity.TextMeshPro.dll
 taglib-sharp.dll
+Bass.Net.dll (just method definitions looking at the OG code)
+netstandard.dll

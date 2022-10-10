@@ -367,4 +367,11 @@ GameAssembly/UnityEngine.CoreModule.dll
 GameAssembly/MelodyReactor2.dll
 GameAssembly/Unity.TextMeshPro.dll
 GameAssembly/taglib-sharp.dll
+GameAssembly/Bass.Net.dll
+GameAssembly/netstandard.dll
+
+*.dll
+*.exe
+*.flac
+
 .idea/

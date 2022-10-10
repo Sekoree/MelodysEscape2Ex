@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using CustomAudioEngine.Entities;
 using HarmonyLib;
 using MelodyReactor2;
 using UnityEngine;
@@ -19,7 +21,7 @@ namespace CustomAudioEngine
                 MReactor.CacheOnsetsAreas = false;
                 MReactor.EnableHeldNoteDetection = true;
                 MReactor.UseOwnThread = true;
-                var customAudioEngine = new TestAudioEngine(windowHandle);
+                var customAudioEngine = new CustomAudioEngine(windowHandle);
                 customAudioEngine.SetPluginsDirectory(Application.dataPath + "/Plugins/x86_64");
 
                 //get private and internal methods of MusicManager with reflection
@@ -96,15 +98,35 @@ namespace CustomAudioEngine
         }
     }
     
+    [HarmonyPatch(typeof(TrackLoadUIController), "GetMusicLoadingStatusText")]
+    public class TrackLoadUIController_GetMusicLoadingStatusText_Patch
+    {
+        public static void Postfix(MusicLoadingStatus status, int percentage, ref string __result)
+        {
+            if (percentage == 100)
+            {
+                return;
+            }
+
+            if ((int)status == 100)
+            {
+                __result = "Loading YouTube URL...";
+            }
+        }
+    }
+    
     [HarmonyPatch(typeof(GameController), "ExportTrackToCache")]
     public class GameController_ExportTrackToCache_SanatizeYouTubeURL
     {
-        public static bool Prefix(GameController __instance, ref MusicData musicData, TrackDefinition trackDefinition)
+        public static bool Prefix(GameController __instance, ref MusicData musicData, ref TrackDefinition trackDefinition)
         {
-            string text = Path.GetFileName(musicData.MusicInfo.Filename) + "_" + ((int)MGame.CurrentDifficultyRules.ObstacleDensity).ToString(CultureInfo.InvariantCulture) + ".txt";
-            if (text.ToLower().StartsWith("watch?v="))
+            Console.WriteLine("Exporting track to cache: " + musicData.MusicInfo.Filename);
+            //string text = Path.GetFileName(musicData.MusicInfo.Filename) + "_" + ((int)MGame.CurrentDifficultyRules.ObstacleDensity).ToString(CultureInfo.InvariantCulture) + ".txt";
+            if (musicData.MusicInfo is WebMusicInfo webMusicInfo)
             {
-                text = text.Substring(8);
+                Console.WriteLine("Sanatizing YouTube URL");
+                var videoId = Regex.Match(webMusicInfo.BaseUrl, @"v=(?<id>[^&]+)").Groups["id"].Value;
+                var text = "[ME2Ex][YT]_" + videoId + "_" + ((int)MGame.CurrentDifficultyRules.ObstacleDensity).ToString(CultureInfo.InvariantCulture) + ".txt";
                 string text2 = Path.Combine(__instance.CacheDirectoryPath, text);
                 try
                 {
@@ -114,6 +136,7 @@ namespace CustomAudioEngine
                     }
                     trackDefinition.DisplayBPM = (int)Math.Round(musicData.MusicInfo.BPM);
                     string trackCacheData = musicData.GetTrackCacheData(trackDefinition, "1.03");
+                    Console.WriteLine("Proposed filename: " + text2);
                     if (File.Exists(text2))
                     {
                         if (File.ReadAllText(text2) != trackCacheData)
@@ -137,6 +160,25 @@ namespace CustomAudioEngine
                     Debug.Log("Error while trying to save Track Cache file: '" + text2 + "'");
                     Debug.LogException(exception);
                 }
+                return false;
+            }
+            return true;
+        }
+    }
+    
+    //Man patching base lib classes wew
+    [HarmonyPatch(typeof(Path), "GetFileName")]
+    public class GameController_AnalyseMusicFileAsync_Patch
+    {
+        static readonly Regex regex = new Regex(@"^https:\/\/www\.youtube\.com\/watch\?v=(?<id>[a-zA-Z0-9_-]{11})$");
+        
+        public static bool Prefix(ref string __result, ref string path)
+        {
+            var match = regex.Match(path);
+            if (match.Success)
+            {
+                var id = match.Groups["id"].Value;
+                __result = $"[ME2Ex][YT]_{id}";
                 return false;
             }
             return true;

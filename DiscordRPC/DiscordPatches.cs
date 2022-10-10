@@ -173,11 +173,12 @@ namespace DiscordRPC
             {
                 hearts = "💛💛💛💛💛";
             }
-            
+
+            var perfectSanitize = __instance.TextMaxChainValue.text.Split(' ')[0];
             var activity = new Activity
             {
                 State = "Escaped : " + songName,
-                Details = $"{hearts} | Difficulty: {__instance.TextDifficultyValue.text} | Best Chain: {__instance.TextMaxChainValue.text}",
+                Details = $"{hearts} | Difficulty: {__instance.TextDifficultyValue.text} | Best Chain: {perfectSanitize}",
                 Assets =
                 {
                     LargeImage = "melody",
