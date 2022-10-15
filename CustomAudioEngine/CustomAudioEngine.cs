@@ -51,18 +51,18 @@ namespace CustomAudioEngine
 
         #region Unkown Fields
 
-        private readonly int E_int;
+        private readonly int StreamProcChannelCount;
         private int c_int;
         private int D_int;
         private int d_int;
         private long a_long;
-        private bool A_bool;
-        private int b_int;
-        private int a_int;
+        private bool IsNotMonoOrNot44100Frequency;
+        private int BassMixChannel;
+        private int InitialMonoChannel;
         private float A_float;
         private int e_int;
         private int F_int;
-        private int B_int;
+        private int StreamProcChannel;
         private float a_float;
         private int C_int;
         private long B_long;
@@ -74,6 +74,8 @@ namespace CustomAudioEngine
         private IntPtr A_intPtr;
 
         #endregion
+
+        public bool CurrentIsYouTube { get; set; }
 
         public CustomAudioEngine(IntPtr window)
         {
@@ -90,33 +92,34 @@ namespace CustomAudioEngine
                 MReactor.FFTQuality = 1024;
             }
 
-            E_int = MReactor.FFTQuality / 1024;
+            StreamProcChannelCount = MReactor.FFTQuality / 1024;
             //Debug.Log("E_int: " + E_int);
-            Console.WriteLine("E_int: " + E_int);
-            a_floatArray = new float[MReactor.FFTQuality * E_int];
+            Console.WriteLine("E_int: " + StreamProcChannelCount);
+            
+            a_floatArray = new float[MReactor.FFTQuality * StreamProcChannelCount];
             //Debug.Log("a_floatArray.Length: " + a_floatArray.Length);
             Console.WriteLine("a_floatArray.Length: " + a_floatArray.Length);
+            
             B_floatArray = new float[MReactor.FFTQuality];
             //Debug.Log("B_floatArray.Length: " + B_floatArray.Length);
             Console.WriteLine("B_floatArray.Length: " + B_floatArray.Length);
+            
             A_byteArray = new byte[MReactor.FFTQuality / 2];
             //Debug.Log("A_byteArray.Length: " + A_byteArray.Length);
             Console.WriteLine("A_byteArray.Length: " + A_byteArray.Length);
-            A_floatArray = new float[MReactor.FFTQuality / 2 * E_int];
+            
+            A_floatArray = new float[MReactor.FFTQuality / 2 * StreamProcChannelCount];
             //Debug.Log("A_floatArray.Length: " + A_floatArray.Length);
             Console.WriteLine("A_floatArray.Length: " + A_floatArray.Length);
+            
             c_int = GetBassFlagsForFFTQuality(MReactor.FFTQuality);
             //Debug.Log("c_int: " + c_int);
             Console.WriteLine("c_int: " + c_int);
-            PrintUsedBassFlags(c_int);
             if (!USE_FFT_HANN_WINDOW)
             {
                 c_int |= 32;
-                PrintUsedBassFlags(c_int);
             }
-
             c_int |= 16;
-            PrintUsedBassFlags(c_int);
         }
 
         #region Helper Methods
@@ -140,20 +143,6 @@ namespace CustomAudioEngine
                 default:
                     return -2147483643;
             }
-        }
-
-        public void PrintUsedBassFlags(int enumValue)
-        {
-            //Debug.Log("--------------------");
-            Console.WriteLine("--------------------");
-            var input = (BassFlags)enumValue;
-            foreach (Enum value in Enum.GetValues(typeof(BassFlags)))
-                if (input.HasFlag(value))
-                    //Debug.Log(value);
-                    Console.WriteLine(value);
-
-            //Debug.Log("--------------------");
-            Console.WriteLine("--------------------");
         }
 
         public List<string> GetPluginFiles(string directoryPath, string searchPattern, SearchOption searchOption)
@@ -183,8 +172,8 @@ namespace CustomAudioEngine
 
         private void ReadAudioTags(ChannelInfo channelInfo, bool isNotMonoOrNot44100Hz, bool readFromFile = true)
         {
-            _channelLength = Bass.ChannelGetLength(a_int);
-            var length = Bass.ChannelBytes2Seconds(a_int, _channelLength);
+            _channelLength = Bass.ChannelGetLength(InitialMonoChannel);
+            var length = Bass.ChannelBytes2Seconds(InitialMonoChannel, _channelLength);
             MusicData_ProcessChannelParameters(isNotMonoOrNot44100Hz ? 44100 : channelInfo.Frequency,
                 channelInfo.Channels, length);
             MusicData.MusicInfo.SampleRatePlayback = channelInfo.Frequency;
@@ -265,8 +254,8 @@ namespace CustomAudioEngine
                 }
 
                 var ptr = (float*)(void*)buffer;
-                var num = length / 4 / E_int;
-                var num2 = num / E_int;
+                var num = length / 4 / StreamProcChannelCount;
+                var num2 = num / StreamProcChannelCount;
                 var num3 = this.B_floatArray.Length;
                 var num4 = this.a_floatArray.Length - num3;
                 var num5 = 1024.0;
@@ -287,7 +276,7 @@ namespace CustomAudioEngine
                     //tbh i dont think these are bass flags
                     //PrintUsedBassFlags(a_floatArray.Length * 4);
                     //Console.WriteLine("Bass.ChannelGetData with length: " + a_floatArray.Length * 4);
-                    var num7 = Bass.ChannelGetData(A_bool ? b_int : a_int, a_floatArray,
+                    var num7 = Bass.ChannelGetData(IsNotMonoOrNot44100Frequency ? BassMixChannel : InitialMonoChannel, a_floatArray,
                         a_floatArray.Length * 4);
                     D_int = num7 / 4;
                     a_long += D_int;
@@ -337,8 +326,8 @@ namespace CustomAudioEngine
                 var num11 = 0;
                 for (var j = 0; j < num; j++)
                 {
-                    var num12 = j * E_int;
-                    for (var k = 0; k < E_int; k++)
+                    var num12 = j * StreamProcChannelCount;
+                    for (var k = 0; k < StreamProcChannelCount; k++)
                     {
                         var num13 = d_int + j + num2 * k;
                         if (num13 >= D_int)
@@ -516,6 +505,22 @@ namespace CustomAudioEngine
 
         #endregion
 
+        public override void SetMusicFile(string fileName)
+        {
+            Console.WriteLine("SetMusicFile: " + fileName);
+            if (fileName.StartsWith("[ME2Ex][YT]_"))
+            {
+                fileName = $"https://www.youtube.com/watch?v={fileName.Substring(12)}";
+                CurrentIsYouTube = true;
+            }
+            else
+            {
+                CurrentIsYouTube = false;
+            }
+            Console.WriteLine("SetMusicFile: " + fileName);
+            base.SetMusicFile(fileName);
+        }
+
         #region Setup Methods
 
         public override void SetPluginsDirectory(string path)
@@ -594,18 +599,21 @@ namespace CustomAudioEngine
                 return false;
             }
 
-            var videoId = VideoId.TryParse(MusicFile);
+            //remove [ME2Ex][YT]_ from youtube links
+            var sanitisedMusicFile = CurrentIsYouTube ?  MusicFile.Substring(12) : MusicFile;
+            
+            var videoId = VideoId.TryParse(sanitisedMusicFile);
             var isYoutube = videoId != null;
             if (isYoutube)
             {
                 MusicData.MusicInfo = new WebMusicInfo()
                 {
-                    BaseUrl = MusicFile,
+                    BaseUrl = sanitisedMusicFile,
                     FileFullPath = videoId,
                     Filename = videoId,
                     FilenameWithoutExt = videoId
                 };
-                GetYouTubeVideoInfo(videoId.Value);
+                GetYouTubeVideoInfo();
             }
             else
             {
@@ -625,17 +633,15 @@ namespace CustomAudioEngine
             {
                 //Bass.NetPreBuffer = 100;
                 //Bass.NetBufferLength = 1000 * 30;
-                //Bass.NetAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36";
-                Bass.NetAgent = "com.google.android.youtube/17.31.35 (Linux; U; Android 11) gzip";
-                a_int = Bass.CreateStream(webInfo.DirectUrl, 0, BassFlags.Mono | BassFlags.Float | BassFlags.Prescan | BassFlags.Decode, null);
+                InitialMonoChannel = Bass.CreateStream(webInfo.DataBytes, 0, webInfo.DataBytes.LongLength, BassFlags.Mono | BassFlags.Float | BassFlags.Prescan | BassFlags.Decode);
             }
             else
             {
-                a_int = Bass.CreateStream(base.MusicFile, 0L, 0L,
+                InitialMonoChannel = Bass.CreateStream(base.MusicFile, 0L, 0L,
                     BassFlags.Mono | BassFlags.Float | BassFlags.Prescan | BassFlags.Decode);
             }
 
-            if (a_int == 0)
+            if (InitialMonoChannel == 0)
             {
                 MusicData = null;
                 LastError = "Failed to create stream";
@@ -645,10 +651,10 @@ namespace CustomAudioEngine
                 return false;
             }
 
-            var channelInfo = Bass.ChannelGetInfo(a_int);
-            A_bool = channelInfo.Channels > 1 || (FORCE_44100_DECODING && channelInfo.Frequency != 44100);
+            var channelInfo = Bass.ChannelGetInfo(InitialMonoChannel);
+            IsNotMonoOrNot44100Frequency = channelInfo.Channels > 1 || (FORCE_44100_DECODING && channelInfo.Frequency != 44100);
             //A_bool = false;
-            ReadAudioTags(channelInfo, A_bool, !isYoutube);
+            ReadAudioTags(channelInfo, IsNotMonoOrNot44100Frequency, !isYoutube);
             if (MusicData.MusicInfo.Duration < 10.0)
             {
                 MusicData = null;
@@ -657,74 +663,109 @@ namespace CustomAudioEngine
                 return false;
             }
 
-            if (A_bool)
+            if (IsNotMonoOrNot44100Frequency)
             {
-                b_int = BassMix.CreateMixerStream(44100, 1, BassFlags.Float | BassFlags.Prescan | BassFlags.Decode);
-                if (b_int == 0)
+                BassMixChannel = BassMix.CreateMixerStream(44100, 1, BassFlags.Float | BassFlags.Prescan | BassFlags.Decode);
+                if (BassMixChannel == 0)
                 {
                     MusicData = null;
                     LastError = "Failed to create mixer stream";
                     LastErrorCode = Bass.LastError.ToString();
                     //Debug.LogError("Failed to create mixer stream: " + Bass.LastError);
                     Console.WriteLine("Failed to create mixer stream: " + Bass.LastError);
-                    Bass.StreamFree(a_int);
-                    Bass.StreamFree(b_int);
+                    Bass.StreamFree(InitialMonoChannel);
+                    Bass.StreamFree(BassMixChannel);
                     return false;
                 }
 
-                if (!BassMix.MixerAddChannel(b_int, a_int, BassFlags.RecordEchoCancel))
+                if (!BassMix.MixerAddChannel(BassMixChannel, InitialMonoChannel, BassFlags.RecordEchoCancel))
                 {
                     MusicData = null;
                     LastError = "Failed to add channel to mixer";
                     LastErrorCode = Bass.LastError.ToString();
                     //Debug.LogError("Failed to add channel to mixer: " + Bass.LastError);
                     Console.WriteLine("Failed to add channel to mixer: " + Bass.LastError);
-                    Bass.StreamFree(a_int);
-                    Bass.StreamFree(b_int);
+                    Bass.StreamFree(InitialMonoChannel);
+                    Bass.StreamFree(BassMixChannel);
                     return false;
                 }
             }
 
             //Debug.Log("Creating channel with StreamProcedure!");
-            Console.WriteLine("Creating channel with StreamProcedure!");
-            B_int = Bass.CreateStream(44100, E_int, BassFlags.Float | BassFlags.Decode, _streamProc, IntPtr.Zero);
+            Console.WriteLine("Creating channel with StreamProcedure! E_int: " + StreamProcChannelCount);
+            StreamProcChannel = Bass.CreateStream(44100, StreamProcChannelCount, BassFlags.Float | BassFlags.Decode, _streamProc, IntPtr.Zero);
             return true;
         }
 
-        private void GetYouTubeVideoInfo(VideoId videoId)
+        private void GetYouTubeVideoInfo()
         {
             //process start yt-dlp.exe with arguments -f bestaudio , -g and base youtubeurl + videoid
-            var process = new Process
+            Console.WriteLine("Creating Tasks");
+            var t1 = new Task(GetVideoInfoAsync);
+            var t2 = new Task(GetAudioBytesAsync);
+            Console.WriteLine("Configuring Tasks");
+            t1.ConfigureAwait(true);
+            t2.ConfigureAwait(true);
+            Console.WriteLine("Starting Tasks");
+            t1.Start();
+            t2.Start();
+            Console.WriteLine("Waiting for Tasks");
+            Task.WaitAll(t1, t2);
+        }
+
+        private void GetAudioBytesAsync()
+        {
+            var sanitisedMusicFile = CurrentIsYouTube ?  MusicFile.Substring(12) : MusicFile;
+            var dataProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = Path.Combine(Directory.GetCurrentDirectory(), "yt-dlp.exe"),
-                    Arguments = $"-f bestaudio -g {MusicFile}",
+                    FileName = Path.Combine(Directory.GetCurrentDirectory(), "me2util.exe"),
+                    Arguments = $"video \"{sanitisedMusicFile}\"",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true
                 }
             };
-            process.Start();
+            dataProcess.Start();
             //read the output of the process
-            var output = process.StandardOutput.ReadToEnd();
+            var memStream = new MemoryStream();
+            dataProcess.StandardOutput.BaseStream.CopyTo(memStream);
             //wait for the process to exit
-            process.WaitForExit();
-
-            Console.WriteLine(output);
-            
+            memStream.Position = 0;
             var asWebInfo = MusicData.MusicInfo as WebMusicInfo;
-            asWebInfo.DirectUrl = output;
-            asWebInfo.TagArtist = "YouTube_Test";
-            asWebInfo.TagTitle = "YouTube_Test";
-            MusicData.MusicInfo = asWebInfo;
+            asWebInfo.DataBytes = memStream.ToArray();
+        }
+        
+        private void GetVideoInfoAsync()
+        {
+            var sanitisedMusicFile = CurrentIsYouTube ?  MusicFile.Substring(12) : MusicFile;
+            var infoProcess = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = Path.Combine(Directory.GetCurrentDirectory(), "me2util.exe"),
+                    Arguments = $"info \"{sanitisedMusicFile}\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                }
+            };
+            infoProcess.Start();
+            var title = infoProcess.StandardOutput.ReadLine();
+            var author = infoProcess.StandardOutput.ReadLine();
+            infoProcess.WaitForExit();
+            infoProcess.Dispose();
+            var asWebInfo = MusicData.MusicInfo as WebMusicInfo;
+            asWebInfo.TagArtist = author;
+            asWebInfo.TagTitle = title;
         }
 
         public override bool IsReadyToAnalyze()
         {
             //Debug.Log("Is Channel Ready To Analyze?: " + (a_int != 0));
-            Console.WriteLine("Is Channel Ready To Analyze?: " + (a_int != 0));
-            return a_int != 0;
+            Console.WriteLine("Is Channel Ready To Analyze?: " + (InitialMonoChannel != 0));
+            return InitialMonoChannel != 0;
         }
 
         public override void InitAndAnalyzeMusicFileAsync()
@@ -746,16 +787,12 @@ namespace CustomAudioEngine
             if (MReactor.AudioEngine.InitMusicFile())
             {
                 MReactor.AudioEngine.AnalyzeMusicFile();
-                var data = MusicData.GetTrackCacheData(MusicData.TrackDefinition, "1.03");
-                System.IO.File.WriteAllText("test.txt", data);
             }
         }
 
         private void AnalyzeMusicFileAsyncThread()
         {
             MReactor.AudioEngine.AnalyzeMusicFile();
-            var data = MusicData.GetTrackCacheData(MusicData.TrackDefinition, "1.03");
-            System.IO.File.WriteAllText("test.txt", data);
         }
 
         public override void AnalyzeMusicFile()
@@ -770,25 +807,25 @@ namespace CustomAudioEngine
                 _analyzeStopwatch.Restart();
 
 
-                if (MusicData.MusicInfo is WebMusicInfo)
-                {
-                    //wait until the download is finished
-                    //get the length of the stream
-                    var length = Bass.StreamGetFilePosition(a_int, FileStreamPosition.End);
-                    //get the download progress
-                    var progress = Bass.StreamGetFilePosition(a_int, FileStreamPosition.Download);
-                    while (progress < length)
-                    {
-                        //progress as percentage
-                        var percentage = (int) (progress * 100.0 / length);
-                        MusicData.OnLoadingStatusChanged((MusicLoadingStatus)100, percentage);
-                        Console.WriteLine($"Download Progress: {progress} / {length} ({percentage}%)");
-                        //wait a little
-                        Thread.Sleep(100);
-                        //get the download progress
-                        progress = Bass.StreamGetFilePosition(a_int, FileStreamPosition.Download);
-                    }
-                }
+                //if (MusicData.MusicInfo is WebMusicInfo)
+                //{
+                //    //wait until the download is finished
+                //    //get the length of the stream
+                //    var length = Bass.StreamGetFilePosition(InitialMonoChannel, FileStreamPosition.End);
+                //    //get the download progress
+                //    var progress = Bass.StreamGetFilePosition(InitialMonoChannel, FileStreamPosition.Download);
+                //    while (progress < length)
+                //    {
+                //        //progress as percentage
+                //        var percentage = (int) (progress * 100.0 / length);
+                //        MusicData.OnLoadingStatusChanged((MusicLoadingStatus)100, percentage);
+                //        Console.WriteLine($"Download Progress: {progress} / {length} ({percentage}%)");
+                //        //wait a little
+                //        Thread.Sleep(100);
+                //        //get the download progress
+                //        progress = Bass.StreamGetFilePosition(InitialMonoChannel, FileStreamPosition.Download);
+                //    }
+                //}
                 
                 ProcessAudioData();
 
@@ -833,7 +870,8 @@ namespace CustomAudioEngine
 
         private void GetFFTData_Internal()
         {
-            var couldSetPos = Bass.ChannelSetPosition(A_bool ? b_int : a_int, 0L);
+            //Console.WriteLine("GetFFTData_Internal() called!");
+            var couldSetPos = Bass.ChannelSetPosition(IsNotMonoOrNot44100Frequency ? BassMixChannel : InitialMonoChannel, 0L);
             Console.WriteLine("Could set position: " + couldSetPos);
             d_int = 0;
             a_float = 0f;
@@ -854,15 +892,15 @@ namespace CustomAudioEngine
             }
 
             //FFT 8192?
-            while (Bass.ChannelGetData(B_int, A_floatArray, c_int) > 0)
-            {;
+            while (Bass.ChannelGetData(StreamProcChannel, A_floatArray, c_int) > 0)
+            {
                 //Console.WriteLine("ChannelGetData: " + Bass.LastError);
-                for (var i = 0; i < E_int; i++)
+                for (var i = 0; i < StreamProcChannelCount; i++)
                 {
                     byte b = 0;
                     for (var j = 2; j < num2; j++)
                     {
-                        var num4 = A_floatArray[j * E_int + i];
+                        var num4 = A_floatArray[j * StreamProcChannelCount + i];
                         if (num4 < MReactor.DECIBEL_MIN_VALUE)
                         {
                             A_byteArray[j] = 0;
@@ -939,9 +977,9 @@ namespace CustomAudioEngine
 
         public override void FreeMusicFile()
         {
-            Bass.StreamFree(a_int);
-            Bass.StreamFree(b_int);
-            Bass.StreamFree(B_int);
+            Bass.StreamFree(InitialMonoChannel);
+            Bass.StreamFree(BassMixChannel);
+            Bass.StreamFree(StreamProcChannel);
         }
 
         #endregion
@@ -973,7 +1011,7 @@ namespace CustomAudioEngine
 
             if (isYoutube)
             {
-                C_int = Bass.CreateStream(webInfo.DirectUrl, 0, flags, null);
+                C_int = Bass.CreateStream(webInfo.DataBytes, 0, webInfo.DataBytes.LongLength, flags);
             }
             else
             {

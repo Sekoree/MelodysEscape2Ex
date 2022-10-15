@@ -1,9 +1,19 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using ManagedBass;
 using MelodyReactor2;
 using CustomAudioEngine = CustomAudioEngine.CustomAudioEngine;
 
 Console.WriteLine("Hello, World!");
+
+int flag1 = -2147483645;
+int flag2 = -2147483644;
+flag1 |= 16;
+flag2 |= 16;
+
+var flags1 = (BassFlags)flag1;
+var flags2 = (BassFlags)flag2;
+
 
 DifficultyRules.InitializeDefaultDifficulties();
 MReactor.CurrentDifficultyRules = DifficultyRules.DefaultDifficulties[2];

@@ -125,6 +125,18 @@
       <Reference Include="UnityEngine.ImageConversionModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
         <HintPath>..\packages\UnityEngine.Modules.2019.4.25\lib\net45\UnityEngine.ImageConversionModule.dll</HintPath>
       </Reference>
+      <Reference Include="UnityEngine.TextRenderingModule">
+        <HintPath>..\..\..\.nuget\packages\unityengine.modules\2019.4.25\lib\net45\UnityEngine.TextRenderingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UI">
+        <HintPath>..\GameAssembly\UnityEngine.UI.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIElementsModule">
+        <HintPath>..\GameAssembly\UnityEngine.UIElementsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIModule">
+        <HintPath>..\GameAssembly\UnityEngine.UIModule.dll</HintPath>
+      </Reference>
       <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
         <HintPath>..\packages\UnityEngine.Modules.2019.4.25\lib\net45\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
       </Reference>
@@ -161,11 +173,6 @@
       <Reference Include="YoutubeExplode, Version=6.2.2.0, Culture=neutral, processorArchitecture=MSIL">
         <HintPath>..\packages\YoutubeExplode.6.2.2\lib\net461\YoutubeExplode.dll</HintPath>
       </Reference>
-    </ItemGroup>
-    <ItemGroup>
-      <Content Include="yt-dlp.exe">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

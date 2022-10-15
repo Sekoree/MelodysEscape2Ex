@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Globalization;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using CustomAudioEngine.Entities;
 using HarmonyLib;
 using MelodyReactor2;
 using UnityEngine;
+using YoutubeExplode.Videos;
+using Debug = UnityEngine.Debug;
 
 namespace CustomAudioEngine
 {
@@ -61,7 +62,8 @@ namespace CustomAudioEngine
     {
         public static void Postfix(FileSelectUIController __instance)
         {
-            __instance.DrivesScrollList.AddItem("YouTube URLs", "", 100, __instance.Sprites[7]);
+            __instance.DrivesScrollList.AddItem("Open YT Links File", "", 100, __instance.Sprites[7]);
+            __instance.DrivesScrollList.AddItem("YouTube Links", "", 101, __instance.Sprites[7]);
         }
     }
 
@@ -78,19 +80,51 @@ namespace CustomAudioEngine
             {
                 return true;
             }
+
+            __instance.HideMusicInfo();
             var button = sender as ButtonColorText;
+
+            //get selectedDriveFullPath from private field in FileSelectUIController with reflection
+            field = typeof(FileSelectUIController).GetField("selectedDriveFullPath",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            field?.SetValue(__instance, button.FullPathTag);
+
+            var linkFile = Path.Combine(Directory.GetCurrentDirectory(), "youtube_links.txt");
+            if (!File.Exists(linkFile))
+            {
+                File.WriteAllText(linkFile, "//Put your youtube links here, one per line");
+            }
+
             if (button?.EnumIDTag == 100)
             {
+                Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "youtube_links.txt"));
+                return false;
+            }
+            else if (button?.EnumIDTag == 101)
+            {
+                //get private string lastOpenedPath of FileSelectUIController with reflection
+                var lastOpenedPathField = typeof(FileSelectUIController).GetField("lastOpenedPath",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                lastOpenedPathField.SetValue(__instance, null);
                 __instance.FoldersScrollList.ClearItems();
                 __instance.ClearFilesList(false);
-                __instance.FilesScrollList.SetHeader("YouTube URLs");
+                __instance.FilesScrollList.SetHeader("YouTube Links");
                 bool isUsingUINavigation = __instance.TrackController.InputController.IsUsingUINavigation;
-                if (!File.Exists("youtube_links.txt"))
+                //read youtube links from file
+                var links = File.ReadAllLines(linkFile).Where(x => !x.StartsWith("//")).ToList();
+                var parsedLinks = new List<string>();
+                if (links.Any())
                 {
-                    File.WriteAllText("youtube_links.txt", string.Empty);
+                    parsedLinks.AddRange(from t in links
+                        select VideoId.TryParse(t)
+                        into id
+                        where id != null
+                        select $"[ME2Ex][YT]_{id.Value}");
+
+                    __instance.FilesScrollList.AddFilesItems(parsedLinks, isUsingUINavigation, __instance.Sprites[0]);
                 }
-                var links = File.ReadAllLines("youtube_links.txt");
-                __instance.FilesScrollList.AddFilesItems(links, isUsingUINavigation, __instance.Sprites[0]);
+
+                __instance.HideMusicInfo();
                 return false;
             }
 
@@ -98,90 +132,21 @@ namespace CustomAudioEngine
         }
     }
     
-    [HarmonyPatch(typeof(TrackLoadUIController), "GetMusicLoadingStatusText")]
-    public class TrackLoadUIController_GetMusicLoadingStatusText_Patch
+    [HarmonyPatch(typeof(AudioEngine), "MusicFile", MethodType.Getter)]
+    public class AudioEngine_get_MusicFile_HandleYouTube
     {
-        public static void Postfix(MusicLoadingStatus status, int percentage, ref string __result)
+        public static void Postfix(AudioEngine __instance, ref string __result)
         {
-            if (percentage == 100)
+            if (!(__instance is CustomAudioEngine customAudioEngine) || !customAudioEngine.CurrentIsYouTube) 
+                return;
+            
+            var videoId = VideoId.TryParse(__result);
+            if (videoId == null)
             {
+                __result = null;
                 return;
             }
-
-            if ((int)status == 100)
-            {
-                __result = "Loading YouTube URL...";
-            }
-        }
-    }
-    
-    [HarmonyPatch(typeof(GameController), "ExportTrackToCache")]
-    public class GameController_ExportTrackToCache_SanatizeYouTubeURL
-    {
-        public static bool Prefix(GameController __instance, ref MusicData musicData, ref TrackDefinition trackDefinition)
-        {
-            Console.WriteLine("Exporting track to cache: " + musicData.MusicInfo.Filename);
-            //string text = Path.GetFileName(musicData.MusicInfo.Filename) + "_" + ((int)MGame.CurrentDifficultyRules.ObstacleDensity).ToString(CultureInfo.InvariantCulture) + ".txt";
-            if (musicData.MusicInfo is WebMusicInfo webMusicInfo)
-            {
-                Console.WriteLine("Sanatizing YouTube URL");
-                var videoId = Regex.Match(webMusicInfo.BaseUrl, @"v=(?<id>[^&]+)").Groups["id"].Value;
-                var text = "[ME2Ex][YT]_" + videoId + "_" + ((int)MGame.CurrentDifficultyRules.ObstacleDensity).ToString(CultureInfo.InvariantCulture) + ".txt";
-                string text2 = Path.Combine(__instance.CacheDirectoryPath, text);
-                try
-                {
-                    if (!Directory.Exists(__instance.CacheDirectoryPath))
-                    {
-                        Directory.CreateDirectory(__instance.CacheDirectoryPath);
-                    }
-                    trackDefinition.DisplayBPM = (int)Math.Round(musicData.MusicInfo.BPM);
-                    string trackCacheData = musicData.GetTrackCacheData(trackDefinition, "1.03");
-                    Console.WriteLine("Proposed filename: " + text2);
-                    if (File.Exists(text2))
-                    {
-                        if (File.ReadAllText(text2) != trackCacheData)
-                        {
-                            Debug.Log("[cache] Track Cache differ, overwriting! " + text);
-                            File.WriteAllText(text2, trackCacheData);
-                        }
-                        else
-                        {
-                            Debug.Log("[cache] Identical Cache Files, no action taken: " + text);
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("[cache] Wrote track cache file: " + text);
-                        File.WriteAllText(text2, trackCacheData);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    Debug.Log("Error while trying to save Track Cache file: '" + text2 + "'");
-                    Debug.LogException(exception);
-                }
-                return false;
-            }
-            return true;
-        }
-    }
-    
-    //Man patching base lib classes wew
-    [HarmonyPatch(typeof(Path), "GetFileName")]
-    public class GameController_AnalyseMusicFileAsync_Patch
-    {
-        static readonly Regex regex = new Regex(@"^https:\/\/www\.youtube\.com\/watch\?v=(?<id>[a-zA-Z0-9_-]{11})$");
-        
-        public static bool Prefix(ref string __result, ref string path)
-        {
-            var match = regex.Match(path);
-            if (match.Success)
-            {
-                var id = match.Groups["id"].Value;
-                __result = $"[ME2Ex][YT]_{id}";
-                return false;
-            }
-            return true;
+            __result = $"[ME2Ex][YT]_{videoId.Value}";
         }
     }
 }

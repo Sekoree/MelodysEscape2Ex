@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObfuscationHelp", "Obfuscat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongRenderer", "SongRenderer\SongRenderer.csproj", "{C088FF13-A571-491B-9E1E-B6744C7E375B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ME2StreamingUtil", "ME2StreamingUtil\ME2StreamingUtil.csproj", "{D52E1FD7-6740-4E00-AE99-2D86E67622B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{C088FF13-A571-491B-9E1E-B6744C7E375B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C088FF13-A571-491B-9E1E-B6744C7E375B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C088FF13-A571-491B-9E1E-B6744C7E375B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D52E1FD7-6740-4E00-AE99-2D86E67622B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D52E1FD7-6740-4E00-AE99-2D86E67622B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D52E1FD7-6740-4E00-AE99-2D86E67622B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D52E1FD7-6740-4E00-AE99-2D86E67622B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
