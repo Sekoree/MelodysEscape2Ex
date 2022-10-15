@@ -139,7 +139,7 @@ namespace CustomAudioEngine
         {
             if (!(__instance is CustomAudioEngine customAudioEngine) || !customAudioEngine.CurrentIsYouTube) 
                 return;
-            
+
             var videoId = VideoId.TryParse(__result);
             if (videoId == null)
             {

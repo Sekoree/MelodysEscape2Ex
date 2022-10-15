@@ -609,9 +609,9 @@ namespace CustomAudioEngine
                 MusicData.MusicInfo = new WebMusicInfo()
                 {
                     BaseUrl = sanitisedMusicFile,
-                    FileFullPath = videoId,
-                    Filename = videoId,
-                    FilenameWithoutExt = videoId
+                    FileFullPath = MusicFile,
+                    Filename = MusicFile,
+                    FilenameWithoutExt = MusicFile
                 };
                 GetYouTubeVideoInfo();
             }
