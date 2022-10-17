@@ -102,6 +102,11 @@ namespace CustomAudioEngine
             }
             else if (button?.EnumIDTag == 101)
             {
+                //get private method SetRefreshLabelVisibility(bool) of FileSelectUIController with reflection
+                var method = typeof(FileSelectUIController).GetMethod("SetRefreshLabelVisibility",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                method?.Invoke(__instance, new object[] { false });
+
                 //get private string lastOpenedPath of FileSelectUIController with reflection
                 var lastOpenedPathField = typeof(FileSelectUIController).GetField("lastOpenedPath",
                     System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);

@@ -590,9 +590,9 @@ namespace CustomAudioEngine
 
         #region Decode Stream
 
-        public override bool InitMusicFile()
+        public override bool InitMusicFile(bool ignoreTooShort = false)
         {
-            base.InitMusicFile();
+            base.InitMusicFile(ignoreTooShort);
             if (string.IsNullOrWhiteSpace(this.MusicFile))
             {
                 LastError = "Music file is null or empty";
@@ -655,7 +655,7 @@ namespace CustomAudioEngine
             IsNotMonoOrNot44100Frequency = channelInfo.Channels > 1 || (FORCE_44100_DECODING && channelInfo.Frequency != 44100);
             //A_bool = false;
             ReadAudioTags(channelInfo, IsNotMonoOrNot44100Frequency, !isYoutube);
-            if (MusicData.MusicInfo.Duration < 10.0)
+            if (MusicData.MusicInfo.Duration < 10.0 && !ignoreTooShort)
             {
                 MusicData = null;
                 LastError = "Music file is too short";
@@ -784,7 +784,7 @@ namespace CustomAudioEngine
 
         private void InitAndAnalyzeMusicFileAsyncThread()
         {
-            if (MReactor.AudioEngine.InitMusicFile())
+            if (MReactor.AudioEngine.InitMusicFile(false))
             {
                 MReactor.AudioEngine.AnalyzeMusicFile();
             }
@@ -866,6 +866,9 @@ namespace CustomAudioEngine
             {
                 GetFFTData_Internal();
             }
+            
+            //In the OG source there is an if check here if CacheMusicSamples is true and a flag that is always true, a !false
+            //One can only happened here, and a path get filename thing into nothingness
         }
 
         private void GetFFTData_Internal()
@@ -986,7 +989,7 @@ namespace CustomAudioEngine
 
         #region Playback Stream
 
-        public override bool LoadMusicFile()
+        public override bool LoadMusicFile(bool loop)
         {
             if (string.IsNullOrWhiteSpace(MusicFile))
             {
@@ -1001,6 +1004,10 @@ namespace CustomAudioEngine
             }
 
             var flags = BassFlags.Prescan | BassFlags.Float;
+            if (loop)
+            {
+                flags |= BassFlags.Loop;
+            }
             if (MReactor.UseSoftwareSampling)
             {
                 flags |= BassFlags.SoftwareMixing;
@@ -1274,42 +1281,21 @@ namespace CustomAudioEngine
 
         private void ProcessMusicStateInfo()
         {
+            var musicInfo = MusicData.MusicInfo;
             var pos = Bass.ChannelGetPosition(C_int);
-            MusicData.MusicInfo.Position = Bass.ChannelBytes2Seconds(C_int, pos);
-            if (MusicData.MusicInfo.Position < 0.0)
-            {
-                MusicData.MusicInfo.Position = 0.0;
-            }
-
+            musicInfo.PositionWithoutLatency = Bass.ChannelBytes2Seconds(C_int, pos);
+            musicInfo.Position = musicInfo.PositionWithoutLatency - LatencyCompensationInSeconds;
             var num = MusicData.MusicInfo.Position * MusicData.MusicInfo.SamplesPerSeconds;
-            var num2 = (float)(num - Math.Truncate(num));
-            if (num2 < 0f)
+            var sampleIDFromPosition = MusicData.GetSampleIDFromPosition(num, out var sampleProgress);
+            musicInfo.CurrentSampleID = sampleIDFromPosition;
+            if (musicInfo.CurrentSampleID >= musicInfo.TotalSamples)
             {
-                num2 = 0f;
-            }
-
-            if (num2 > 0.999f)
-            {
-                num2 = 0.999f;
-            }
-
-            MusicData.MusicInfo.CurrentSampleID = MusicData.SecondsToSamples(MusicData.MusicInfo.Position, false);
-            if (MusicData.MusicInfo.CurrentSampleID < 0)
-            {
-                MusicData.MusicInfo.CurrentSampleID = 0;
-                num = 0.0;
-                num2 = 0f;
-            }
-
-            if (MusicData.MusicInfo.CurrentSampleID >= MusicData.MusicInfo.TotalSamples)
-            {
-                MusicData.MusicInfo.CurrentSampleID = MusicData.MusicInfo.TotalSamples - 1;
+                musicInfo.CurrentSampleID = musicInfo.TotalSamples - 1;
                 num = MusicData.MusicInfo.CurrentSampleID;
-                num2 = 0f;
+                sampleProgress = 0f;
             }
-
-            MusicData.MusicInfo.CurrentSamplePosition = num;
-            MusicData.MusicInfo.CurrentInSampleProgress = num2;
+            musicInfo.CurrentSamplePosition = num;
+            musicInfo.CurrentInSampleProgress = sampleProgress;
         }
 
         #endregion
