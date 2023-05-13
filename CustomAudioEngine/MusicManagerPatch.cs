@@ -142,7 +142,7 @@ namespace CustomAudioEngine
     {
         public static void Postfix(AudioEngine __instance, ref string __result)
         {
-            if (!(__instance is CustomAudioEngine customAudioEngine) || !customAudioEngine.CurrentIsYouTube) 
+            if (!(__instance is CustomAudioEngine customAudioEngine)) 
                 return;
 
             var videoId = VideoId.TryParse(__result);

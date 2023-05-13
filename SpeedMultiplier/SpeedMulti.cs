@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
-using MelodyReactor2;
 using UnityEngine;
 
 namespace ME2Diag
