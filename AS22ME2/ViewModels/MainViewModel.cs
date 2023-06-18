@@ -47,7 +47,7 @@ public partial class MainViewModel : ViewModelBase
 
     #region Conversion Parameters
 
-    [ObservableProperty] private decimal _solidObstacleChance = 70; //decimal cause NumericUpDown
+    [ObservableProperty] private decimal _solidObstacleChance = 30; //decimal cause NumericUpDown
     [ObservableProperty] private decimal _minimumObstacleDistance = 9; //decimal cause NumericUpDown
     [ObservableProperty] private bool _replaceCacheFile = false; //decimal cause NumericUpDown
 
@@ -193,9 +193,9 @@ public partial class MainViewModel : ViewModelBase
         //skip nodes after the end of the track
         nodes = nodes.TakeWhile(n => n.Seconds < copyOfTrack.SongDuration).ToArray();
 
-        if (nodes.Length < sumsAndSeconds.sums.Length) //funny error
-            throw new Exception(string.Format("Not enough nodes? Less nodes than samples {0} Nodes, {1} Samples",
-                nodes.Length, sumsAndSeconds.sums.Length));
+        //if (nodes.Length < sumsAndSeconds.sums.Length) //funny error
+        //    throw new Exception(string.Format("Not enough nodes? Less nodes than samples {0} Nodes, {1} Samples",
+        //        nodes.Length, sumsAndSeconds.sums.Length));
 
 
         var indexedNodes = new Dictionary<int, Node>(); //index, node
