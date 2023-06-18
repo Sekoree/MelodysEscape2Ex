@@ -1,0 +1,141 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:AS22ME2.Controls">
+    <Design.PreviewWith>
+        <controls:Audiosurf2Parameters />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|Audiosurf2Parameters">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid ColumnDefinitions="Auto, Auto"
+                      RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto">
+                    <!-- Taken from MiniRenderers cppBuildAll method -->
+                    <NumericUpDown Grid.Column="0" Grid.Row="0"
+                                   ButtonSpinnerLocation="Left"
+                                   Width="200"
+                                   Minimum="0" Maximum="100"
+                                   Increment="0.0001" AllowSpin="True"
+                                   Value="{TemplateBinding MinSpeed}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="0"
+                               Margin="10, 0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="Min Speed"/>
+                    
+                    
+                    <NumericUpDown Grid.Column="0" Grid.Row="1"
+                                   ButtonSpinnerLocation="Left"
+                                   Width="200"
+                                   Minimum="0" Maximum="100"
+                                   Increment="0.0001" AllowSpin="True"
+                                   Value="{TemplateBinding MaxSpeed}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="1"
+                               Margin="10, 0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="Max Speed"/>
+                    
+                    
+                    <NumericUpDown Grid.Column="0" Grid.Row="2"
+                                   ButtonSpinnerLocation="Left"
+                                   Width="200"
+                                   Minimum="0" Maximum="100"
+                                   Increment="0.0001" AllowSpin="True"
+                                   Value="{TemplateBinding MinBestJumpTime}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="2"
+                               Margin="10, 0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="Min Best Jump Time"/>
+                    
+                    
+                    <CheckBox Grid.Column="0" Grid.Row="3"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              IsChecked="{TemplateBinding DownhillOnly}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="3"
+                               Margin="10, 0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="Downhill Only"/>
+                    
+                    
+                    <NumericUpDown Grid.Column="0" Grid.Row="4"
+                                   ButtonSpinnerLocation="Left"
+                                   Width="200"
+                                   Minimum="0" Maximum="100"
+                                   Increment="0.0001" AllowSpin="True"
+                                   Value="{TemplateBinding SteepUphillScaler}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="4"
+                               Margin="10, 0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="Steep Uphill Scaler"/>
+                    
+                    
+                    <NumericUpDown Grid.Column="0" Grid.Row="5"
+                                   ButtonSpinnerLocation="Left"
+                                   Width="200"
+                                   Minimum="0" Maximum="100"
+                                   Increment="0.0001" AllowSpin="True"
+                                   Value="{TemplateBinding SteepDownhillScaler}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="5"
+                               Margin="10, 0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="Steep Downhill Scaler"/>
+                    
+                    
+                    <CheckBox Grid.Column="0" Grid.Row="6"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              IsChecked="{TemplateBinding UseAveragedFlatSlopes}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="6"
+                               Margin="10, 0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="Use Avg'd Flat Slopes"/>
+                    
+                    
+                    <NumericUpDown Grid.Column="0" Grid.Row="7"
+                                   ButtonSpinnerLocation="Left"
+                                   Width="200"
+                                   Minimum="0" Maximum="100"
+                                   Increment="0.0001" AllowSpin="True"
+                                   Value="{TemplateBinding TiltSmootherUphill}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="7"
+                               Margin="10, 0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="Uphill Smoothing"/>
+                    
+                    <NumericUpDown Grid.Column="0" Grid.Row="8"
+                                   ButtonSpinnerLocation="Left"
+                                   Width="200"
+                                   Minimum="0" Maximum="100"
+                                   Increment="0.0001" AllowSpin="True"
+                                   Value="{TemplateBinding TiltSmootherDownhill}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="8"
+                               Margin="10, 0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="Downhill Smoothing"/>
+                    
+                    <NumericUpDown Grid.Column="0" Grid.Row="9"
+                                   ButtonSpinnerLocation="Left"
+                                   Width="200"
+                                   Minimum="0" Maximum="100"
+                                   Increment="0.0001" AllowSpin="True"
+                                   Value="{TemplateBinding Gravity}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="9"
+                               Margin="10, 0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="Gravity"/>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

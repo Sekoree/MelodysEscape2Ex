@@ -1,0 +1,108 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TrackEditorUI.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:TrackEditorUI.Controls"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="TrackEditorUI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="TrackEditorUI">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid ShowGridLines="True"
+          RowDefinitions="Auto, Auto, *">
+        
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File" 
+                      CornerRadius="5">
+                <MenuItem Header="_Open"/>
+                <MenuItem Header="_Save"/>
+                <MenuItem Header="Save _As"/>
+                <MenuItem Header="_Exit"/>
+            </MenuItem>
+            <MenuItem Header="Transitions" 
+                      CornerRadius="5">
+                <MenuItem Header="Add"/>
+                <MenuItem Header="Insert"/>
+                <MenuItem Header="Remove"/>
+                <Separator/>
+                <MenuItem Header="Remove All"/>
+            </MenuItem>
+            <MenuItem Header="Obstacles" 
+                      CornerRadius="5">
+                <MenuItem Header="Add"/>
+                <MenuItem Header="Insert"/>
+                <MenuItem Header="Remove"/>
+                <Separator/>
+                <MenuItem Header="Remove All"/>
+            </MenuItem>
+        </Menu>
+        
+        <WrapPanel Grid.Row="1"
+                   Margin="10,5"
+                   VerticalAlignment="Center"
+                   Orientation="Horizontal">
+            
+            <TextBlock Margin="5,0" 
+                       VerticalAlignment="Center" Text="File Version:"/>
+            <TextBox Text="{Binding TrackVersion}"/>
+            <Separator Width="25"
+                       Margin="-10,0">
+                <Separator.RenderTransform>
+                    <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5"/>
+                </Separator.RenderTransform>
+            </Separator>
+            
+            <TextBlock Margin="5,0" 
+                       VerticalAlignment="Center" Text="Samples:"/>
+            <TextBlock VerticalAlignment="Center"
+                       Text="{Binding SampleCount}"/>
+            <Separator Width="25"
+                       Margin="-10,0">
+                <Separator.RenderTransform>
+                    <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5"/>
+                </Separator.RenderTransform>
+            </Separator>
+            <TextBlock Margin="5,0" 
+                       VerticalAlignment="Center" 
+                       Text="Transitions:"/>
+            <TextBlock VerticalAlignment="Center"
+                       Text="{Binding TransitionsCount}"/>
+            <Separator Width="25"
+                       Margin="-10,0">
+                <Separator.RenderTransform>
+                    <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5"/>
+                </Separator.RenderTransform>
+            </Separator>
+            <TextBlock Margin="5,0" 
+                       VerticalAlignment="Center" 
+                       Text="Obstacles:"/>
+            <TextBlock VerticalAlignment="Center"
+                       Text="{Binding ObstaclesCount}"/>
+            <Separator Width="25"
+                       Margin="-10,0">
+                <Separator.RenderTransform>
+                    <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5"/>
+                </Separator.RenderTransform>
+            </Separator>
+        </WrapPanel>
+        
+        <Grid Grid.Row="2">
+            
+            <controls:TransitionsVisualizer Margin="10"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            Track="{Binding Track}"/>
+            
+        </Grid>
+        
+    </Grid>
+    
+</Window>

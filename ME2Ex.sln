@@ -1,16 +1,33 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ME2PatchLoader", "ME2PatchLoader\ME2PatchLoader.csproj", "{0E772614-DCEC-4DD6-B744-FACCA23D63E5}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33712.159
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ME2PatchLoader", "ME2PatchLoader\ME2PatchLoader.csproj", "{0E772614-DCEC-4DD6-B744-FACCA23D63E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObfuscationHelp", "ObfuscationHelp\ObfuscationHelp.csproj", "{E115339A-9406-4123-9BB8-AB6C6A9F2C92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObfuscationHelp", "ObfuscationHelp\ObfuscationHelp.csproj", "{E115339A-9406-4123-9BB8-AB6C6A9F2C92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ME2StreamingUtil", "ME2StreamingUtil\ME2StreamingUtil.csproj", "{D52E1FD7-6740-4E00-AE99-2D86E67622B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ME2StreamingUtil", "ME2StreamingUtil\ME2StreamingUtil.csproj", "{D52E1FD7-6740-4E00-AE99-2D86E67622B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeedMultiplier", "SpeedMultiplier\SpeedMultiplier.csproj", "{C65816E4-0F18-498C-85B6-24CBF622E47C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpeedMultiplier", "SpeedMultiplier\SpeedMultiplier.csproj", "{C65816E4-0F18-498C-85B6-24CBF622E47C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomAudioEngine", "CustomAudioEngine\CustomAudioEngine.csproj", "{4CA4EC58-3C03-4F71-AF0B-AA1C16CEDABE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomAudioEngine", "CustomAudioEngine\CustomAudioEngine.csproj", "{4CA4EC58-3C03-4F71-AF0B-AA1C16CEDABE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordRPC", "DiscordRPC\DiscordRPC.csproj", "{C7A7D452-99D0-45B2-9640-4142E06A66EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscordRPC", "DiscordRPC\DiscordRPC.csproj", "{C7A7D452-99D0-45B2-9640-4142E06A66EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "METrackEditor", "METrackEditor\METrackEditor.csproj", "{10C10139-6186-4FF3-9FA4-45CA86B178ED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "METrackEditor.Test", "METrackEditor.Test\METrackEditor.Test.csproj", "{253E6992-616F-46C2-8155-C4F44F435FFC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomAudioEngine2", "CustomAudioEngine2\CustomAudioEngine2.csproj", "{C414799A-24C0-4BF6-B354-BA13898EB5A6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniAS2Renderer", "MiniAS2Renderer\MiniAS2Renderer.csproj", "{8262F374-3245-4567-A941-2754DBDB7D01}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackEditorUI", "TrackEditorUI\TrackEditorUI.csproj", "{7138BF72-AD7B-4A7C-9870-B82E2D5C3C9F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AS22ME2", "AS22ME2\AS22ME2.csproj", "{60EF8355-B5C2-4BD3-B3CA-4D6584F1DF7B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AS22ME2.Desktop", "AS22ME2.Desktop\AS22ME2.Desktop.csproj", "{3BD1BC52-BE61-4063-AF33-0AF2B670ADD0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +59,39 @@ Global
 		{C7A7D452-99D0-45B2-9640-4142E06A66EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7A7D452-99D0-45B2-9640-4142E06A66EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7A7D452-99D0-45B2-9640-4142E06A66EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10C10139-6186-4FF3-9FA4-45CA86B178ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10C10139-6186-4FF3-9FA4-45CA86B178ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10C10139-6186-4FF3-9FA4-45CA86B178ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10C10139-6186-4FF3-9FA4-45CA86B178ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{253E6992-616F-46C2-8155-C4F44F435FFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{253E6992-616F-46C2-8155-C4F44F435FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{253E6992-616F-46C2-8155-C4F44F435FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{253E6992-616F-46C2-8155-C4F44F435FFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C414799A-24C0-4BF6-B354-BA13898EB5A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C414799A-24C0-4BF6-B354-BA13898EB5A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C414799A-24C0-4BF6-B354-BA13898EB5A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C414799A-24C0-4BF6-B354-BA13898EB5A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8262F374-3245-4567-A941-2754DBDB7D01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8262F374-3245-4567-A941-2754DBDB7D01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8262F374-3245-4567-A941-2754DBDB7D01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8262F374-3245-4567-A941-2754DBDB7D01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7138BF72-AD7B-4A7C-9870-B82E2D5C3C9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7138BF72-AD7B-4A7C-9870-B82E2D5C3C9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7138BF72-AD7B-4A7C-9870-B82E2D5C3C9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7138BF72-AD7B-4A7C-9870-B82E2D5C3C9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60EF8355-B5C2-4BD3-B3CA-4D6584F1DF7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60EF8355-B5C2-4BD3-B3CA-4D6584F1DF7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60EF8355-B5C2-4BD3-B3CA-4D6584F1DF7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60EF8355-B5C2-4BD3-B3CA-4D6584F1DF7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BD1BC52-BE61-4063-AF33-0AF2B670ADD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BD1BC52-BE61-4063-AF33-0AF2B670ADD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BD1BC52-BE61-4063-AF33-0AF2B670ADD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BD1BC52-BE61-4063-AF33-0AF2B670ADD0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C34FB35B-4BE2-4997-A4E7-24B7A56ACE4C}
 	EndGlobalSection
 EndGlobal

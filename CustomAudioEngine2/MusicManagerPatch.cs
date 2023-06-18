@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using HarmonyLib;
 using MelodyReactor2;
 using UnityEngine;
-using YoutubeExplode.Videos;
-using Debug = UnityEngine.Debug;
 
 namespace CustomAudioEngine
 {
