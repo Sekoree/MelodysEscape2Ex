@@ -266,7 +266,7 @@ public partial class MainViewModel : ViewModelBase
 
             var obst = rng.Next(4, 8);
             var wallChance = rng.Next(0, 100);
-            if (wallChance > (100 - (int)SolidObstacleChance))
+            if (wallChance >= (100 - (int)SolidObstacleChance))
                 obst -= 4;
 
             var obstacle = new Obstacle()
